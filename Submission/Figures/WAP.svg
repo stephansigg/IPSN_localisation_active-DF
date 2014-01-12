@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://web.resource.org/cc/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:svg="http://www.w3.org/2000/svg" id="Layer_1" version="1.1" xml:space="preserve" viewBox="0 0 150 150" enable-background="new 0 0 150 150" y="0px" x="0px">
+<switch>
+	<foreignObject y="0" x="0" requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/" width="1" height="1">
+	</foreignObject>
+	<g>
+		<g clip-rule="evenodd" fill-rule="evenodd">
+			<path d="m93.45 107.85h-7v7h7v-7zm-11.05 7v-7h-7v7h7zm22.6 7.15h-53v-32.5h53v32.5zm-33.65-14.15h-7v7h7v-7z" fill="#fff"/>
+			<rect y="107.85" width="7" fill="#f60" x="86.45" height="7"/>
+			<rect y="107.85" width="7" fill="#0f0" x="75.4" height="7"/>
+			<rect y="107.85" width="7" x="64.35" height="7"/>
+				<path stroke-linejoin="round" d="m21.9 60.65c-0.114-2.044 0.094-4.094 0.625-6.15 0.292-1.165 0.684-2.331 1.175-3.5 0.49-1.131 1.073-2.265 1.75-3.4 3.884-6.428 9.667-11.028 17.35-13.8 7.684-2.772 15.042-2.914 22.075-0.425 3.4 1.187 6.242 2.812 8.525 4.875 0.558-0.643 1.158-1.26 1.8-1.85 1.735-1.604 3.811-2.995 6.225-4.175 6.75-3.257 14.092-3.948 22.025-2.075 7.94 1.869 14.173 5.76 18.7 11.675 2.302 2.986 3.826 6.044 4.574 9.175 0.279 1.124 0.453 2.257 0.525 3.4m-42.64-4.45c1.141-1.792 2.707-3.242 4.7-4.35 0.333-0.174 0.675-0.34 1.025-0.5 3.688-1.681 7.53-1.881 11.524-0.6 3.734 1.192 6.584 3.359 8.551 6.5 0.141 0.212 0.274 0.429 0.399 0.65 1.38 2.403 2.013 4.845 1.9 7.325m-74.9 1.75c-0.02-2.128 0.505-4.204 1.575-6.225 0.181-0.326 0.373-0.651 0.575-0.975 0.589-0.926 1.247-1.768 1.975-2.525 1.958-2.042 4.417-3.467 7.375-4.275 4.042-1.113 7.851-0.747 11.425 1.1 1.679 0.855 3.079 1.914 4.2 3.175 0.529 0.596 0.996 1.238 1.4 1.925m7.075-14.675c0.979 0.881 1.854 1.84 2.625 2.875m-4.7 0.1c0.6-1.049 1.292-2.041 2.075-2.975" stroke="#999" stroke-linecap="round" stroke-miterlimit="3" fill="none"/>
+				<path stroke-linejoin="round" d="m93.45 107.85v7h-7v-7h7zm-11.05 7h-7v-7h7v7zm-11.05-7v7h-7v-7h7z" stroke="#000" stroke-linecap="round" stroke-miterlimit="3" stroke-width="3" fill="none"/>
+				<path stroke-linejoin="round" d="m91.5 87l4-28m-31.5 28l-7-27.5" stroke="#000" stroke-linecap="round" stroke-miterlimit="3" stroke-width="6" fill="none"/>
+				<rect stroke-linejoin="round" height="32.5" width="53" stroke="#000" stroke-linecap="round" stroke-miterlimit="3" y="89.5" x="52" stroke-width="2" fill="none"/>
+		</g>
+		<text font-family="'Tahoma'" transform="translate(54.572 98.367)" fill="#006600"><tspan y="0" x="0" font-size="8">Cisco</tspan><tspan y="0" x="18.238" font-size="6">(R)</tspan></text>
+	</g>
+</switch>
+<metadata><rdf:RDF><cc:Work><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/><cc:license rdf:resource="http://creativecommons.org/licenses/publicdomain/"/><dc:publisher><cc:Agent rdf:about="http://openclipart.org/"><dc:title>Openclipart</dc:title></cc:Agent></dc:publisher><dc:title>Wireless Access Point</dc:title><dc:date>2013-01-25T07:57:06</dc:date><dc:description>Cisco wireless access point</dc:description><dc:source>http://openclipart.org/detail/174491/wireless-access-point-by-witcombem-174491</dc:source><dc:creator><cc:Agent><dc:title>witcombem</dc:title></cc:Agent></dc:creator><dc:subject><rdf:Bag><rdf:li>Access</rdf:li><rdf:li>Cisco</rdf:li><rdf:li>Point</rdf:li><rdf:li>WAP</rdf:li><rdf:li>Wireless</rdf:li><rdf:li>Wireless Access Point</rdf:li><rdf:li>clip art</rdf:li><rdf:li>clipart</rdf:li></rdf:Bag></dc:subject></cc:Work><cc:License rdf:about="http://creativecommons.org/licenses/publicdomain/"><cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/><cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/><cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/></cc:License></rdf:RDF></metadata></svg>
