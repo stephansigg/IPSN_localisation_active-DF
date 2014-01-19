@@ -2,8 +2,9 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: writeToFile
+# Author: stephan sigg
 # Description: USRP source write to file
-
+# Generated: Mon May 27 12:41:33 2013
 ##################################################
 
 from PyQt4 import Qt
@@ -46,6 +47,8 @@ import copy
 from array import *
 #import array
 import wx
+
+coordinator =0 
 
 
 ###########################
@@ -309,92 +312,41 @@ class top_block(gr.top_block, Qt.QWidget):
 class MainWindow(wx.Frame, top_block):
     def __init__(self, parent, title):
         self.dirname=''
-
-        # A "-1" in the size parameter instructs wxWidgets to use the default size.
-        # In this case, we select 200px width and the default height.
         wx.Frame.__init__(self, parent, title=title, size=(200,-1))
-        self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE)
-        self.CreateStatusBar() # A Statusbar in the bottom of the window
+        #self.quote = wx.StaticText(self, label="Your quote :", pos=(20, 30))
 
-        # Setting up the menu.
-        filemenu= wx.Menu()
-        menuOpen = filemenu.Append(wx.ID_OPEN, "&Open"," Open a file to edit")
-        menuAbout= filemenu.Append(wx.ID_ABOUT, "&Start Recording"," Information about this program")
-        menuExit = filemenu.Append(wx.ID_EXIT,"E&xit"," Terminate the program")
+        # A multiline TextCtrl - This is here to show how the events work in this program, don't pay too much attention to it
+        self.logger = wx.TextCtrl(self, pos=(500,20), size=(200,300), style=wx.TE_MULTILINE | wx.TE_READONLY)
 
-        # Creating the menubar.
-        menuBar = wx.MenuBar()
-        menuBar.Append(filemenu,"&Action") # Adding the "filemenu" to the MenuBar
-        self.SetMenuBar(menuBar)  # Adding the MenuBar to the Frame content.
+        # button
+        self.button =wx.Button(self, label="Start Recording", pos=(50, 100))
+        self.Bind(wx.EVT_BUTTON, self.Start_record,self.button)
+        
+#        self.button =wx.Button(self, label="Stop Recording", pos=(200, 100))
+#        self.Bind(wx.EVT_BUTTON, self.OnClick2,self.button)
+#        
+#        self.button =wx.Button(self, label="Pause", pos=(350, 100))
+#        self.Bind(wx.EVT_BUTTON, self.OnClick3,self.button)
 
-        # Events.
-        self.Bind(wx.EVT_MENU, self.OnOpen, menuOpen)
-        self.Bind(wx.EVT_MENU, self.OnExit, menuExit)
-        self.Bind(wx.EVT_MENU, self.OnAbout, menuAbout)
+        # the edit control - one line version.
+        self.lblname = wx.StaticText(self, label="Coodinator (Room, Row, Column) :", pos=(20,60))
+        
+        self.editname = wx.TextCtrl(self, value="Enter Coordinator", pos=(270, 60), size=(200,-1))
+        self.Bind(wx.EVT_TEXT, self.EvtText, self.editname)
+        self.Bind(wx.EVT_CHAR, self.EvtChar, self.editname)
 
-        self.sizer2 = wx.BoxSizer(wx.HORIZONTAL)
-        self.buttons = []
-#        #for i in range(0, 6):
-#            #self.buttons.append(wx.Button(self, -1, "Button &"+str(i)))
-#            #self.sizer2.Add(self.buttons[i], 1, wx.EXPAND)
-        self.buttons.append(wx.Button(self, -1, "Start Recording"))
-        self.sizer2.Add(self.buttons[0], 1, wx.EXPAND)
-        
-        
-        self.buttons.append(wx.Button(self, -1, "Stop"))
-        self.sizer2.Add(self.buttons[1], 1, wx.EXPAND)
-        
-        self.buttons.append(wx.Button(self, -1, "Store"))
-        self.sizer2.Add(self.buttons[2], 1, wx.EXPAND)
-        
-        self.buttons.append(wx.Button(self, -1, "Display"))
-        self.sizer2.Add(self.buttons[3], 1, wx.EXPAND)
-        
-        
-        
-        # Use some sizers to see layout options
-        self.sizer = wx.BoxSizer(wx.VERTICAL)
-        self.sizer.Add(self.control, 1, wx.EXPAND)
-        self.sizer.Add(self.sizer2, 0, wx.EXPAND)
-
-        #Layout sizers
-        self.SetSizer(self.sizer)
-        self.SetAutoLayout(1)
-        self.sizer.Fit(self)
-        self.Show()
-        
-    def OnAbout(self,e):
+    def EvtRadioBox(self, event):
+        self.logger.AppendText('EvtRadioBox: %d\n' % event.GetInt())
+    def EvtComboBox(self, event):
+        self.logger.AppendText('EvtComboBox: %s\n' % event.GetString())
+    def Start_record(self,event):
         qapp = Qt.QApplication(sys.argv)
         tb = top_block()
         tb.start()
         tb.show()
         qapp.exec_()
         tb.stop()
-        
-        # Create a message dialog box
-#        dlg = wx.MessageDialog(self, " Indoor Location  \n Write in Python and Orange", "Indoor Location Program", wx.OK)
-#        dlg.ShowModal() # Shows it
-#        dlg.Destroy() # finally destroy it when finished.
-
-    def OnExit(self,e):
-        self.Close(True)  # Close the frame.
-
-    def OnOpen(self,e):
-        """ Open a file"""
-        dlg = wx.FileDialog(self, "Choose a file", self.dirname, "", "*.*", wx.OPEN)
-        if dlg.ShowModal() == wx.ID_OK:
-            self.filename = dlg.GetFilename()
-            self.dirname = dlg.GetDirectory()
-            f = open(os.path.join(self.dirname, self.filename), 'r')
-            self.control.SetValue(f.read())
-            f.close()
-        dlg.Destroy()
-    def EvtRadioBox(self, event):
-        self.logger.AppendText('EvtRadioBox: %d\n' % event.GetInt())
-    def EvtComboBox(self, event):
-        self.logger.AppendText('EvtComboBox: %s\n' % event.GetString())
-    def OnClick(self,event):
-        self.logger.AppendText(" Click on object with Id %d\n" %event.GetId())
+    
     def EvtText(self, event):
         self.logger.AppendText('EvtText: %s\n' % event.GetString())
     def EvtChar(self, event):
@@ -404,11 +356,12 @@ class MainWindow(wx.Frame, top_block):
         self.logger.AppendText('EvtCheckBox: %d\n' % event.Checked())
 
 if __name__ == '__main__':
-     coordinator = input("Enter testing coordinator Room, row, column:")
+     #coordinator = input("Enter testing coordinator Room, row, column:")
      parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
      (options, args) = parser.parse_args()
      app = wx.App(False)
      frame = MainWindow(None, "Indoor Location Learning")
+     frame.Show()
      app.MainLoop()
 #     qapp = Qt.QApplication(sys.argv)
 #     tb = top_block()
@@ -416,3 +369,4 @@ if __name__ == '__main__':
 #     tb.show()
 #     qapp.exec_()
 #     tb.stop()
+
