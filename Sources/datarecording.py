@@ -47,14 +47,11 @@ import copy
 from array import *
 #import array
 import wx
-
-coordinator =0 
-
-
 ###########################
 ### plot features
 #from multiprocessing import Process
 from matplotlib.pyplot import plot, show
+
 
 
 #Todo: integrate the training of classifiers as already done in python
@@ -121,6 +118,11 @@ class top_block(gr.top_block, Qt.QWidget):
 		### TODO: read out the buffer continuously in another thread for classification
 		### TODO: output the classification
 		def _variable_classification():
+			myFile = open("classification.tab", "a")
+			myFile.write('mean\tmedian\tvar\tTCM\tRMS\tmax\tmin\tdiff\tcountmax10%\tdirectionchange\tEntropy\tSpecenergy\tzeroCross\tDirChanzeroCross\tavgzerocross\tavgFFT\tstddeviation\tlocation-coordinator\n') # Write a feature string to a tab file  #18 features
+			myFile.write('c\tc\tc\tc\tc\tc\tc\tc\tc\tc\tc\tc\tc\tc\tc\tc\tc\td\n')  #18 
+			myFile.write('\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tclass\n')
+			myFile.close()
 			while True:
 				# TODO: do classification here
 				classification = self.get_classification()
@@ -220,6 +222,7 @@ class top_block(gr.top_block, Qt.QWidget):
 		self.uhd_usrp_source_0.set_center_freq(self.receiveFrequency, 0)
 		
 	def get_classification(self):
+		
 		# copy buffer to work with the data (would otherwise change too fast)
 		output=list(self.bufferRE)
 		zeroCrossRE=0.0
@@ -297,16 +300,11 @@ class top_block(gr.top_block, Qt.QWidget):
 			if output[i]>tenPercentMaxRE:
 		    		countRE+=1
 		avgzerocross = zeroCrossRE/400 # this feature is not important because related to zeroCross
-		
-		myFile = open("classification.tab", "w")
-		myFile.write('mean\tmedian\tvar\tTCM\tRMS\tmax\tmin\tdiff\tcountmax10%\tdirectionchange\tEntropy\tSpecenergy\tzeroCross\tDirChanzeroCross\tavgzerocross\tavgFFT\tstddeviation\tlocation-coordinator\n') # Write a feature string to a tab file  #18 features
-		myFile.write('c\tc\tc\tc\tc\tc\tc\tc\tc\tc\tc\tc\tc\tc\tc\tc\tc\td\n')  #18 
-		myFile.write('\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tclass\n')
-		#myFile.write('{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\t{12}\t{13}\t{14}\n'.format(meanRE, medianRE, varRE, TCM, rmsRE, maxRE, minRE, diffRE, countRE, directionchange, zeroCrossRE, DirChanzeroCross, avgzerocross, stdRE, coordinator))
-		myFile.write('{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\t{12}\t{13}\t{14}\t{15}\t{16}\n'.format(meanRE, medianRE, varRE, TCM, rmsRE, maxRE, minRE, diffRE, countRE, directionchange, specenergy, zeroCrossRE, DirChanzeroCross, avgzerocross, avgFFT, stdRE, coordinator))
-		#myFile.write('{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\n'.format(meanRE, medianRE, varRE, TCM, rmsRE, maxRE, minRE, diffRE, countRE, directionchange, Entropy, specenergy))							
-		myFile.close()
-		
+		myFile = open("classification.tab", "a")
+		myFile.write('{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\t{12}\t{13}\t{14}\t{15}\n'.format(meanRE, medianRE, varRE, TCM, rmsRE, maxRE, minRE, diffRE, countRE, directionchange, specenergy, zeroCrossRE, DirChanzeroCross, avgzerocross, stdRE, coordinator))							
+         #myFile.write('{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\t{12}\t{13}\t{14}\t{15}\t{16}\n'.format(meanRE, medianRE, varRE, TCM, rmsRE, maxRE, minRE, diffRE, countRE, directionchange, specenergy, zeroCrossRE, DirChanzeroCross, avgzerocross, avgFFT, stdRE, coordinator))							
+				
+         	myFile.close()
 		return self.variable_function_probe_1
 
 class MainWindow(wx.Frame, top_block):
@@ -319,8 +317,11 @@ class MainWindow(wx.Frame, top_block):
         self.logger = wx.TextCtrl(self, pos=(500,20), size=(200,300), style=wx.TE_MULTILINE | wx.TE_READONLY)
 
         # button
-        self.button =wx.Button(self, label="Start Recording", pos=(50, 100))
+        self.button =wx.Button(self, label="Start Recording", pos=(50, 150))
         self.Bind(wx.EVT_BUTTON, self.Start_record,self.button)
+        
+        self.button =wx.Button(self, label="Stop Recording", pos=(190, 150))
+        
         
 #        self.button =wx.Button(self, label="Stop Recording", pos=(200, 100))
 #        self.Bind(wx.EVT_BUTTON, self.OnClick2,self.button)
@@ -329,9 +330,16 @@ class MainWindow(wx.Frame, top_block):
 #        self.Bind(wx.EVT_BUTTON, self.OnClick3,self.button)
 
         # the edit control - one line version.
-        self.lblname = wx.StaticText(self, label="Coodinator (Room, Row, Column) :", pos=(20,60))
+        self.lblname = wx.StaticText(self, label="Coordinator :", pos=(20,60))
+        self.editname = wx.TextCtrl(self, value="Enter Room", pos=(270, 60), size=(200,-1))
         
-        self.editname = wx.TextCtrl(self, value="Enter Coordinator", pos=(270, 60), size=(200,-1))
+#        self.editname = wx.TextCtrl(self, value="Enter Row", pos=(270, 90), size=(200,-1))
+#        self.lblname = wx.StaticText(self, label="Coordinator Row :", pos=(20,90))
+#         
+#        
+#        self.lblname = wx.StaticText(self, label="Coordinator Column :", pos=(20,120))
+#        self.editname = wx.TextCtrl(self, value="Enter Column", pos=(270, 120), size=(200,-1))   
+        
         self.Bind(wx.EVT_TEXT, self.EvtText, self.editname)
         self.Bind(wx.EVT_CHAR, self.EvtChar, self.editname)
 
@@ -348,7 +356,8 @@ class MainWindow(wx.Frame, top_block):
         tb.stop()
     
     def EvtText(self, event):
-        self.logger.AppendText('EvtText: %s\n' % event.GetString())
+        global coordinator
+        coordinator = event.GetString()
     def EvtChar(self, event):
         self.logger.AppendText('EvtChar: %d\n' % event.GetKeyCode())
         event.Skip()
@@ -356,7 +365,7 @@ class MainWindow(wx.Frame, top_block):
         self.logger.AppendText('EvtCheckBox: %d\n' % event.Checked())
 
 if __name__ == '__main__':
-     #coordinator = input("Enter testing coordinator Room, row, column:")
+
      parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
      (options, args) = parser.parse_args()
      app = wx.App(False)
@@ -369,4 +378,3 @@ if __name__ == '__main__':
 #     tb.show()
 #     qapp.exec_()
 #     tb.stop()
-
