@@ -37,7 +37,7 @@ class transmit900(grc_wxgui.top_block_gui):
 		)
 		self.uhd_usrp_sink_0.set_samp_rate(samp_rate)
 		self.uhd_usrp_sink_0.set_center_freq(900000000, 0)
-		self.uhd_usrp_sink_0.set_gain(30, 0)
+		self.uhd_usrp_sink_0.set_gain(100, 0)
 		self.gr_sig_source_x_0 = gr.sig_source_c(samp_rate, gr.GR_SIN_WAVE, 1000, 1, 0)
 		self.gr_multiply_const_vxx_0 = gr.multiply_const_vcc((16384, ))
 
