@@ -19,21 +19,6 @@ import sys
 import threading
 import time
 import math 
-import testorange
-
-###################################
-### Orange:
-#import orange, orngTree
-######################
-# import for svm:
-#from Orange.classification import svm
-#from Orange.evaluation import testing, scoring
-######################
-# For Confusion matrix:
-#import orngTest, orngStat
-######################
-#import Orange
-##############################
 ### for the queue
 from collections import deque
 import collections
@@ -50,6 +35,18 @@ import wx
 ### plot features
 #from multiprocessing import Process
 from matplotlib.pyplot import plot, show
+# this is classification function
+import orange, orngTree
+######################
+# import for svm:
+from Orange.classification import svm
+from Orange.evaluation import testing, scoring
+######################
+# For Confusion matrix:
+import orngTest, orngStat
+######################
+import Orange
+
 #Todo: integrate the training of classifiers as already done in python
 # Todo: Then, take the sample data, extract relevant features and use them for classification according to the previously sampled features.
 # Todo: Then, output the classification
@@ -74,19 +71,6 @@ class top_block(gr.top_block, Qt.QWidget):
 		self.bufferRE = collections.deque(400*[0], 400) # init buffer of 400 entries, max length 400
 		self.bufferIM = collections.deque(400*[0], 400) # init buffer of 400 entries, max length 400
          
-#         # initialise classifiers
-#		self.train_data = orange.ExampleTable("classification.tab")
-#		#bayes = orange.BayesLearner(train_data)
-#		#tree = orngTree.TreeLearner(train_data)
-#		self.knnLearner = orange.kNNLearner(self.train_data)
-#		#svm = svm.SVMLearner(train_data)
-#		#bayes.name = "bayes"
-#		#tree.name = "tree"
-#		self.knnLearner.name = "knn"
-#		#svm.name = "svm"
-#		self.knnLearner.k = 10
-		
-
 		##################################################
 		# Variables
 		##################################################
@@ -394,7 +378,7 @@ class top_block1(gr.top_block, Qt.QWidget): #store test file
 				# TODO: do classification here
 				classification = self.get_classification()
 				# TODO: Write out classification
-				time.sleep(1.0/(20)) # One classification every 0.5 seconds
+				time.sleep(1.0/(2)) # One classification every 0.5 seconds
 		# starts the thread that samples the signal continuously
 		_variable_classification_thread = threading.Thread(target=_variable_classification)
 		_variable_classification_thread.daemon = True
@@ -570,11 +554,10 @@ class top_block1(gr.top_block, Qt.QWidget): #store test file
          
 		avgzerocross = zeroCrossRE/400 # this feature is not important because related to zeroCross
 		myFile = open("testing.tab", "a+")
-  
-		myFile.write('{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\t{12}\t{13}\t{14}\n'.format(meanRE, medianRE, varRE, TCM, rmsRE, maxRE, minRE, diffRE, countRE, directionchange, zeroCrossRE, DirChanzeroCross, avgzerocross, stdRE, coordinator1))							
-         #myFile.write('{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\t{12}\t{13}\t{14}\t{15}\t{16}\n'.format(meanRE, medianRE, varRE, TCM, rmsRE, maxRE, minRE, diffRE, countRE, directionchange, specenergy, zeroCrossRE, DirChanzeroCross, avgzerocross, avgFFT, stdRE, coordinator))							
-				
-         	myFile.close()
+  		myFile.write('{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\t{12}\t{13}\t{14}\n'.format(meanRE, medianRE, varRE, TCM, rmsRE, maxRE, minRE, diffRE, countRE, directionchange, zeroCrossRE, DirChanzeroCross, avgzerocross, stdRE, coordinator1))							
+         #myFile.write('{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\t{12}\t{13}\t{14}\t{15}\t{16}\n'.format(meanRE, medianRE, varRE, TCM, rmsRE, maxRE, minRE, diffRE, countRE, directionchange, specenergy, zeroCrossRE, DirChanzeroCross, avgzerocross, avgFFT, stdRE, coordinator))								
+			#time.sleep(1/(200))         		
+		myFile.close()
 		return self.variable_function_probe_1
 
 
@@ -632,29 +615,91 @@ class MainWindow(wx.Frame, top_block):
     #def Start_record_testing(self, event):
         
     def Start_record(self,event):
+    	parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
+        (options, args) = parser.parse_args()        
         qapp = Qt.QApplication(sys.argv)
         tb = top_block()
         tb.start()
         tb.show()
         qapp.exec_()
-       # tb.stop()
+        tb.stop()
     def Start_record_testing(self, event):
+        parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
+        (options, args) = parser.parse_args()        
         qapp = Qt.QApplication(sys.argv)
         tb = top_block1()  #duplicate class top_block, only filename changed
         tb.start()
         tb.show()
         qapp.exec_()
+        tb.stop()
         
     def Stop_record(self, event):
         tb = top_block()
         tb.stop()
     def orange_classification(self, event): # classification
+	train_data = orange.ExampleTable("classification.tab") 
+	test_data = orange.ExampleTable("testing.tab")
+	bayes = orange.BayesLearner(train_data)
+	tree = orngTree.TreeLearner(train_data)
+	knnLearner = orange.kNNLearner(train_data)
+	knnLearner.k = 10 # k == 18 seems to be best (at least for 2-3)
+    #   svm2 = svm.SVMLearner()
+	bayes.name = "bayes:"
+	tree.name = "tree:"
+	knnLearner.name = "knn:"
+	classifiers= [bayes, tree, knnLearner]
+	#classifier = orange.BayesLearner(train_data)
+    	c=''
+    	for i in range(len(test_data)):
+        	c0 = classifiers[0](test_data[i])
+        
+        	c1 = classifiers[1](test_data[i])
+        #print c1
+        	c2 = classifiers[2](test_data[i])
+        #print c2
+    #print c0, c1, c2
+        	c = c + bayes.name+str(c0)+'\t'+tree.name+str(c1)+'\t'+knnLearner.name+str(c2)+'\t'+str(i)+'\n'
+
+        #import testorange
                 #print "location predicted", testorange.classification()
-        self.logger1.AppendText('Location Predicted: %s\n' % testorange.classification())
+        self.logger1.AppendText('Location Predicted: %s\n' % c)
+	return c
     def evaluating(self, event):
-        self.logger2.AppendText('Learner  CA     IS     Brier    AUC:\n %s\n' % testorange.evaluating())
+	train_data = orange.ExampleTable("classification.tab")        
+	bayes2 = orange.BayesLearner()
+    	tree2 = orngTree.TreeLearner()
+    	knnLearner2 = orange.kNNLearner()
+    	knnLearner2.k = 10 # k == 18 seems to be best (at least for 2-3)
+    #svm2 = svm.SVMLearner()
+    	bayes2.name = "bayes2"
+    	tree2.name = "tree2"
+    	knnLearner2.name = "knn2"
+    	learners = [bayes2, tree2, knnLearner2]
+
+    	results = orngTest.crossValidation(learners, train_data, folds=10)
+    	print "train_data:"
+    	print train_data
+    	print "k=="
+    	print knnLearner2.k
+    	print 'Learner  CA     IS     Brier    AUC'
+    	c = ''
+    	for i in range(len(learners)):
+        	print "%-8s %5.3f  %5.3f  %5.3f  %5.3f" % (learners[i].name, \
+            	orngStat.CA(results)[i], orngStat.IS(results)[i],
+            	orngStat.BrierScore(results)[i], orngStat.AUC(results)[i])
+        	c = c+str("%-8s"%learners[i].name)+'\t'+ str("%5.3f" %orngStat.CA(results)[i])+'\t'+ str("%5.3f" %orngStat.IS(results)[i])+'\t'+str("%5.3f" %orngStat.BrierScore(results)[i])+'\t'+str("%5.3f" %orngStat.AUC(results)[i]+'\n')
+        self.logger2.AppendText('Learner  CA     IS     Brier    AUC:\n %s\n' % c)
+	return (c)
     def evaluating1(self, event):
-        self.logger3.AppendText('Accuracy bayes, tree, kNN %s\n' % testorange.accuracy())
+	correct = [0.0]*len(classifiers)
+    	for ex in test_data:
+        	for i in range(len(classifiers)):
+            		if classifiers[i](ex) == ex.getclass():
+                		correct[i] += 1
+    	for i in range(len(correct)):
+        	correct[i] = correct[i] / len(test_data)
+        self.logger3.AppendText('Accuracy bayes, tree, kNN %s\n' %correct)
+	return correct
         
     def EvtText(self, event):
         global coordinator
